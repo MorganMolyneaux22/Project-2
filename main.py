@@ -26,7 +26,9 @@ def table(file_path):
     # Load the .csv file into a panda table
     
     data = pd.read_csv(file_path)
-    print(data.head())
+    print(data)
+    # print(data.head) # prints the first 5 rows of the table
+    
 
 
 
