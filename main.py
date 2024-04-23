@@ -6,7 +6,7 @@
 # ██      ██      ██               ██    ██    ██ ████  ██ 
 # ███████  ██████ ███████     ██████     ██    ██  ██████  
 # 
-# Project Created by: Morgan Molyneaux, Kamilla Turapova, Sioelli Olive
+# Project Created by: Morgan Molyneaux, Kamilla Turapova, Sioeli Olive
 # 
 # Purpose:
 # [FILL OUT LATER]
