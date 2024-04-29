@@ -49,6 +49,8 @@ def linear_regression(data):
     Returns:
     None
     '''
+    print("\n \n-------------------------------------------------------------------------------------")
+    print("                                 Linear Regression Analysis")
     # Define the predictors and response variable
     X = data[['Amp', 'Freq', 'Temp', 'Time']]
     y = data['Force']
@@ -62,6 +64,8 @@ def linear_regression(data):
     # Print summary statistics
     print("\nLinear Regression Summary:")
     print(model.summary())
+    # toDo add print summary analysis here <-------
+    print("-------------------------------------------------------------------------------------\n \n")
 
 
 def parsimonious_model(file_path):
@@ -82,4 +86,7 @@ def parsimonious_model(file_path):
     
 if __name__ == "__main__":
     table('ultrasoundData.csv')
+    linear_regression(pd.read_csv('ultrasoundData.csv'))
     parsimonious_model('ultrasoundData.csv')
+
+    
