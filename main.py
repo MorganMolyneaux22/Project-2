@@ -41,6 +41,29 @@ def table(file_path):
           "\nThis shows that Line and Shift do not make a significant difference on Force.")
 
 
+def linear_regression(data):
+    ''' Performs linear regression analysis to determine the significant predictors of Force.
+    Args:
+    data (DataFrame): The DataFrame containing the data.
+    
+    Returns:
+    None
+    '''
+    # Define the predictors and response variable
+    X = data[['Amp', 'Freq', 'Temp', 'Time']]
+    y = data['Force']
+
+    # Add intercept term
+    X = sm.add_constant(X)
+
+    # Fit the linear regression model
+    model = sm.OLS(y, X).fit()
+
+    # Print summary statistics
+    print("\nLinear Regression Summary:")
+    print(model.summary())
+
+
 def parsimonious_model(file_path):
     ''' Using a parsimonious model to predict the force'''
     
