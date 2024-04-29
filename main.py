@@ -54,6 +54,7 @@ def parsimonious_model(file_path):
     formula = 'Force ~ Amp + Freq + Temp + Time + C(Line) + C(Shift) + C(Horn)'
     print("Full model:\n", smf.ols(formula, data=data).fit().summary())
 
+# todO: add a function that will create a parsimonious model that will predict the force by finding significant variables (prdictors) stepwise regression
     
     
 if __name__ == "__main__":
