@@ -20,6 +20,8 @@
 ################################################################################
 import pandas as pd
 import numpy as np;
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
 
 def table(file_path):
     ''' Loads data from .csv file into a panda table'''
@@ -38,5 +40,22 @@ def table(file_path):
     print("\nThe mean force does not vastly differ for each combination of Line and Shift."
           "\nThis shows that Line and Shift do not make a significant difference on Force.")
 
+
+def parsimonious_model(file_path):
+    ''' Using a parsimonious model to predict the force'''
+    
+    # Create a panda table from the .csv file that will be used to create the model
+    data = pd.read_csv(file_path)
+    data['Line'] = data['Line'].astype('category')
+    data['Shift'] = data['Shift'].astype('category')
+    data['Horn'] = data['Horn'].astype('category')
+
+    # Leverege the statsmodels library to create the model, and print the summary
+    formula = 'Force ~ Amp + Freq + Temp + Time + C(Line) + C(Shift) + C(Horn)'
+    print("Full model:\n", smf.ols(formula, data=data).fit().summary())
+
+    
+    
 if __name__ == "__main__":
     table('ultrasoundData.csv')
+    parsimonious_model('ultrasoundData.csv')
