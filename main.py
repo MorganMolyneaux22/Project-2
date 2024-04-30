@@ -83,10 +83,52 @@ def parsimonious_model(file_path):
 
 # todO: add a function that will create a parsimonious model that will predict the force by finding significant variables (prdictors) stepwise regression
     
+# Use backwards elimination to find the most significant predictors, and only include those in the model
+# Find p values (anything higher than 0.05 is not significant and will be removed)
+# Repeat until all predictors are significant
+
+
+def backward_elimination(file_path):
+    ''' Performs backward elimination to determine the significant predictors of Force and remove insignificant predictors '''
+    significance_level=0.05
+    data = pd.read_csv(file_path)
     
-if __name__ == "__main__":
-    table('ultrasoundData.csv')
-    linear_regression(pd.read_csv('ultrasoundData.csv'))
-    parsimonious_model('ultrasoundData.csv')
+    # Convert categorical variables to dummy variables
+    data = pd.get_dummies(data, columns=['Line', 'Shift', 'Horn'], drop_first=True)
+    
+    # Response variable & Predictor variables (excluding the response variable)
+    y = data['Force']
+    X = data.drop('Force', axis=1).select_dtypes(include=[np.number])  # No strings allowed or ELSE IT WILL BREAK THE PGORAM (or the panda libary more specifically)
+    
+    X = sm.add_constant(X)
+    model = sm.OLS(y, X).fit()
+
+    # Search for the most insignificant predictor and remove it, and repeat until all predictors are significant and fit the model
+    while len(X.columns) > 1:
+        p_values = model.pvalues
+        max_p = p_values.max()
+        print("Max p-value: ", max_p)
+        if max_p > significance_level:
+            pushing_p = p_values.idxmax() # Get the feature with the highest p-value (most insignificant as (feature >! significant)
+            X = X.drop(columns=[pushing_p])
+            model = sm.OLS(y, X).fit()
+        else:
+            print("STUPID PROGRAM BREAKING HERE.... jk")
+            break
 
     
+    print("\nLinear Regression Summary (Backward Elimination):")
+    print(model.summary())
+    print("\nThe best parsimonous model to predict force is with the predictors: ", X.columns[1:], "as they are all significant predictors "
+          "\nof Force (p-value < 0.05) through process of backward elimination.  In doing so, the model has been simplified and retained only the most significant predictors. \n")
+    
+    print("\nThe strength of the model can be seen from the R-squared value of 0.762, which indicates that the model explains 76.2% of the variance in the data."
+          "\nThe adjusted R-squared value of 0.758 is also high, which indicates that the model is not overfitting the data."
+          "\nAs so, the model precits [enter variance in force]")
+    print("-------------------------------------------------------------------------------------\n\n")
+ 
+if __name__ == "__main__":
+    # table('ultrasoundData.csv')
+    # linear_regression(pd.read_csv('ultrasoundData.csv'))
+    # parsimonious_model('ultrasoundData.csv')
+    backward_elimination('ultrasoundData.csv')
