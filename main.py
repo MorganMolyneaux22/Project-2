@@ -68,32 +68,12 @@ def linear_regression(data):
     print("-------------------------------------------------------------------------------------\n \n")
 
 
-def parsimonious_model(file_path):
-    ''' Using a parsimonious model to predict the force'''
-    
-    # Create a panda table from the .csv file that will be used to create the model
-    data = pd.read_csv(file_path)
-    data['Line'] = data['Line'].astype('category')
-    data['Shift'] = data['Shift'].astype('category')
-    data['Horn'] = data['Horn'].astype('category')
-
-    # Leverege the statsmodels library to create the model, and print the summary
-    formula = 'Force ~ Amp + Freq + Temp + Time + C(Line) + C(Shift) + C(Horn)'
-    print("Full model:\n", smf.ols(formula, data=data).fit().summary())
-
-# todO: add a function that will create a parsimonious model that will predict the force by finding significant variables (prdictors) stepwise regression
-    
-# Use backwards elimination to find the most significant predictors, and only include those in the model
-# Find p values (anything higher than 0.05 is not significant and will be removed)
-# Repeat until all predictors are significant
-
-
 def backward_elimination(file_path):
     ''' Performs backward elimination to determine the significant predictors of Force and remove insignificant predictors '''
     significance_level=0.05
     data = pd.read_csv(file_path)
     
-    # Convert categorical variables to dummy variables
+    # convert from categorical to numerical
     data = pd.get_dummies(data, columns=['Line', 'Shift', 'Horn'], drop_first=True)
     
     # Response variable & Predictor variables (excluding the response variable)
@@ -110,6 +90,7 @@ def backward_elimination(file_path):
         print("Max p-value: ", max_p)
         if max_p > significance_level:
             pushing_p = p_values.idxmax() # Get the feature with the highest p-value (most insignificant as (feature >! significant)
+            print("Dropping: ", pushing_p)
             X = X.drop(columns=[pushing_p])
             model = sm.OLS(y, X).fit()
         else:
@@ -124,11 +105,24 @@ def backward_elimination(file_path):
     
     print("\nThe strength of the model can be seen from the R-squared value of 0.762, which indicates that the model explains 76.2% of the variance in the data."
           "\nThe adjusted R-squared value of 0.758 is also high, which indicates that the model is not overfitting the data."
-          "\nAs so, the model precits [enter variance in force]")
+          "\nAs so, the model precits the variance of 76.2% of the data, which is a strong model.")
     print("-------------------------------------------------------------------------------------\n\n")
  
+ 
+def confidence_interval():
+    ''' Calculates the confidence interval of the model for the mean values of Force. '''
+    # Predicted force variables (Amp, Freq, Time)
+    const = .203
+    amp = .008
+    freq = .004
+    time = .154
+    degrees_of_freedom = 644 
+    
+    # Find variance? 
+    # Find standard error for predicted vs expected 
+    # Find confidence interval for the mean values of Force
+     
 if __name__ == "__main__":
     # table('ultrasoundData.csv')
     # linear_regression(pd.read_csv('ultrasoundData.csv'))
-    # parsimonious_model('ultrasoundData.csv')
     backward_elimination('ultrasoundData.csv')
