@@ -123,6 +123,6 @@ def confidence_interval():
     # Find confidence interval for the mean values of Force
      
 if __name__ == "__main__":
-    # table('ultrasoundData.csv')
-    # linear_regression(pd.read_csv('ultrasoundData.csv'))
+    table('ultrasoundData.csv')
+    linear_regression(pd.read_csv('ultrasoundData.csv'))
     backward_elimination('ultrasoundData.csv')
