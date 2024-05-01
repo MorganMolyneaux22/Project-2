@@ -22,6 +22,7 @@ import pandas as pd
 import numpy as np;
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
+from scipy.stats import t
 
 def table(file_path):
     ''' Loads data from .csv file into a panda table'''
@@ -109,15 +110,35 @@ def backward_elimination(file_path):
     print("-------------------------------------------------------------------------------------\n\n")
  
  
-def confidence_interval():
+def confidence_interval(file_path):
     ''' Calculates the confidence interval of the model for the mean values of Force. '''
     # Predicted force variables (Amp, Freq, Time)
     const = .203
     amp = .008
     freq = .004
     time = .154
-    degrees_of_freedom = 644 
-    
+    degrees_of_freedom = 644
+
+    data = pd.read_csv(filename)
+
+    predicted_force = const + data['Amp'] * amp + data['Freq'] * freq + data['Time'] * time
+    variance = predicted_force.var()
+
+    # Calculate standard error
+    std_error = (variance / len(data)) ** 0.5
+
+    # Find critical t-value
+    confidence_level = 0.95
+    t_value = t.ppf((1 + confidence_level) / 2, degrees_of_freedom)
+
+    # Calculate bounds
+    margin_of_error = t_value * std_error
+    mean_predicted_force = predicted_force.mean()
+    lower_bound = mean_predicted_force - margin_of_error
+    upper_bound = mean_predicted_force + margin_of_error
+
+    print("\n95% Confidence Interval for the Mean Value of Force:", (lower_bound, upper_bound))
+
     # Find variance? 
     # Find standard error for predicted vs expected 
     # Find confidence interval for the mean values of Force
@@ -126,3 +147,4 @@ if __name__ == "__main__":
     table('ultrasoundData.csv')
     linear_regression(pd.read_csv('ultrasoundData.csv'))
     backward_elimination('ultrasoundData.csv')
+    confidence_interval('ultrasoundData.csv')
