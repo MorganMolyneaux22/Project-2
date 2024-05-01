@@ -119,7 +119,7 @@ def confidence_interval(file_path):
     time = .154
     degrees_of_freedom = 644
 
-    data = pd.read_csv(filename)
+    data = pd.read_csv(file_path)
 
     predicted_force = const + data['Amp'] * amp + data['Freq'] * freq + data['Time'] * time
     variance = predicted_force.var()
@@ -131,7 +131,7 @@ def confidence_interval(file_path):
     confidence_level = 0.95
     t_value = t.ppf((1 + confidence_level) / 2, degrees_of_freedom)
 
-    # Calculate bounds
+    # Caculate the bounds of the confidence interval by finding margin of error
     margin_of_error = t_value * std_error
     mean_predicted_force = predicted_force.mean()
     lower_bound = mean_predicted_force - margin_of_error
